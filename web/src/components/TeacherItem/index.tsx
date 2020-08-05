@@ -3,34 +3,52 @@ import React from 'react'
 import whatsappIcon from '../../assets/icons/whatsapp.svg'
 
 import './styles.css'
+import api from '../../services/api'
 
-function TeacherItem()
+export interface Teacher
 {
+    id: number
+    name: string
+    avatar: string
+    whatsapp: string
+    bio: string
+    subject: string
+    cost: number
+}
+
+interface TeacherItemProps
+{
+    teacher: Teacher
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({teacher}) =>
+{
+    function createNewConnection()
+    {
+        api.post('connections', {user_id: teacher.id})
+    }
+
     return (
         <article className="teacher-item">
             <header>
-                <img src="https://avatars1.githubusercontent.com/u/65172325?s=460&u=5bbaf1ba8bdcd59d65ce20eff48cd5498b6a9d73&v=4" alt="Iago Mendes"/>
+                <img src={teacher.avatar} alt={teacher.name} />
                 <div>
-                    <strong>Iago Mendes</strong>
-                    <span>Física</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
 
-            <p>
-                Entusiasta de Física, Astronomia, Astrofísica, e Cosmologia.
-                <br /> <br />
-                Apaixonado por apontar telescópios para observar a imensidão do nosso magnífico universo e seus astros. Astrofotógrafo e Dev nas horas vagas.
-            </p>
+            <p>{teacher.bio}</p>
 
             <footer>
                 <p>
                     Preço/hora
-                    <strong>R$ 100,00</strong>
+                    <strong>R$ {teacher.cost}</strong>
                 </p>
-                <button type="button">
+                <a onClick={createNewConnection} target="_blank" href={`https://wa.me/${teacher.whatsapp}`}>
                     <img src={whatsappIcon} alt="Whatsapp"/>
                     Entrar em contato
-                </button>
+                </a>
             </footer>
         </article>
     )
